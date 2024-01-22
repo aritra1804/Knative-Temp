@@ -18,11 +18,9 @@ variable "linode_api_token" {
     description = "Your Linode API Personal Access Token. (required)"
     sensitive   = true
 }
-
 variable "k8s_node_type" {
   default="g6-standard-2"
 }
-
 resource "linode_lke_cluster" "terraform_k8s" {
     k8s_version="1.24"
     label="terraform-k8s"
@@ -35,6 +33,15 @@ resource "linode_lke_cluster" "terraform_k8s" {
             min = 3
             max = 8
         }
+    }
+
+    lifecycle {
+        # uncomment when you need to make changes
+        # to the cluster pool
+      ignore_changes = [
+        pool,
+      ]
+      create_before_destroy = true
     }
 }
 
